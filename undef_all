@@ -1,0 +1,5 @@
+export TARGET=
+export LIB=
+export TEST=
+export APP=
+export BUILD_TARGET=

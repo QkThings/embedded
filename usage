@@ -1,0 +1,12 @@
+. undef_all ; export TARGET=arduino.uno; export LIB=qkprogram; make clean; make lib
+. undef_all ; export TARGET=arduino.uno; export LIB=qkperipheral; make clean; make lib
+. undef_all ; export TARGET=arduino.uno; export APP=test/allfeatures; make clean; make app
+. undef_all ; export TARGET=arduino.uno; make upload PORT=/dev/ttyACM0 FILE=test/allfeatures/bin/app.bin
+
+. undef_all ; export TARGET=efm32.comm_bt_2_0; export LIB=qkprogram; make clean; make lib BUILD_TARGET=BUILD_COMM
+. undef_all ; export TARGET=efm32.comm_bt_2_0; export LIB=qkperipheral; make clean; make lib
+. undef_all ; export TARGET=efm32.comm_bt_2_0; export APP=board/comm_bluetooth_2_0/app/slave; make clean; make app
+. undef_all ; export TARGET=efm32.comm_bt_2_0; make upload PORT=/dev/ttyUSB0 FILE=board/comm_bluetooth_2_0/app/slave/bin/app.bin
+
+. undef_all ; export TARGET=chibios.stm32p107; export LIB=qkprogram; make clean; make lib
+

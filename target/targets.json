@@ -1,0 +1,31 @@
+{
+    "version": "0.0.1",
+    "EFM32": {
+        "toolchainUrl": "url-link",
+        "variants": [
+            {
+                "name": "G_OLIMEX"
+            },
+            {
+                "name": "G_STK"
+            },
+            {
+                "name": "DEV_TG"
+            },
+            {
+                "name": "DEV_TG_REVB"
+            }
+        ]
+    },
+    "Arduino": {
+        "toolchainUrl": "url-link",
+        "variants": [
+            {
+                "name": "Uno"
+            },
+            {
+                "name": "Nano"
+            }
+        ]
+    }
+}

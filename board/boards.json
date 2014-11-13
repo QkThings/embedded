@@ -1,0 +1,47 @@
+{
+    "version": "0.0.1",
+    "device": [
+        {
+            "name": "Arduino UNO",
+            "rev": [
+                {
+                    "id": null,
+                    "target": "arduino.uno"
+                }
+            ]
+        },
+        {
+            "name": "Arduino Nano",
+            "rev": [
+                {
+                    "id": null,
+                    "target": "arduino.nano"
+                }
+            ]
+        },
+        {
+            "name": "QkDevice EFM32TG DEV",
+            "rev": [
+                {
+                    "id": "a",
+                    "target": "efm32.dev_tg"
+                },
+                {
+                    "id": "b",
+                    "target": "efm32.dev_tg_revb"
+                }
+            ]
+        }
+    ],
+    "comm": [
+        {
+            "name": "QkComm Bluetooth 2.0",
+            "rev": [
+                {
+                    "id": null,
+                    "target": "efm32.tg222f32",
+                }
+            ]
+        }
+    ]
+}
