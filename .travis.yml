@@ -1,5 +1,5 @@
 language: cpp
-before_script:
+install:
 - ./ci_bootstrap.sh
 script:
 - python deploy.py
