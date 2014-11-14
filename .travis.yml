@@ -1,5 +1,6 @@
 before_install:
 - echo "before_install"
+- git clone https://github.com/qkthings/qkthings
 before_script:
 - echo "before_script"
 script:
