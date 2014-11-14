@@ -1,0 +1,6 @@
+before_install:
+- echo "before_install"
+before_script:
+- echo "before_script"
+script:
+- echo "script"
