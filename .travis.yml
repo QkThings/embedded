@@ -1,6 +1,6 @@
 language: c
 install:
 - sudo chmod a+x ci_bootstrap.sh
-- ./ci_bootstrap.sh
+- sudo ./ci_bootstrap.sh
 script:
 - python deploy.py
