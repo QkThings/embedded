@@ -1,7 +1,5 @@
-before_install:
-- echo "before_install"
-- git clone https://github.com/qkthings/qkthings
+language: cpp
 before_script:
-- echo "before_script"
+- ./ci_bootstrap.sh
 script:
-- echo "script"
+- python deploy.py
