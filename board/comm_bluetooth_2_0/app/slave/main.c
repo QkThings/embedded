@@ -18,21 +18,17 @@ bool send = true;
 
 void core_callback_app(qk_callback_arg *arg)
 {
+	int bytes_available = qk_uart_bytes_available(COMM_UART_ID);
 
-
-	char str[4] = "hi\r\n";
-	if(send)
+	if(bytes_available > 0)
 	{
-		qk_uart_write(COMM_UART_ID, (uint8_t*)str, 4);
-		send = false;
-	}
+		int bytes_read = 0;
+		uint8_t rxbuf[128];
+		bytes_read = qk_uart_read(COMM_UART_ID, rxbuf, bytes_available);
+		rxbuf[bytes_read] = '\0';
+		QK_LOG_DEBUG("%s\n", (char*)rxbuf);
 
-	if(qk_uart_bytes_available(COMM_UART_ID) > 0)
-	{
-		char rxbuf[16];
-		qk_uart_read(COMM_UART_ID, rxbuf, 16);
-		QK_LOG_DEBUG("rx: %s\n", rxbuf);
-		send = true;
+		qk_protocol_process_bytes(rxbuf, bytes_read, qk_protocol_comm);
 	}
 }
 
@@ -43,73 +39,55 @@ void protocol_callback_send_bytes(qk_callback_arg *arg)
 	qk_uart_write(COMM_UART_ID, buf, count);
 }
 
-void qk_setup()
+void hc05_init()
 {
-	qk_board_set_name("Bluetooth 2.0");
-//
-//	qk_core_register_callback(QK_CORE_CALLBACK_APP,
-//							  core_callback_app);
-//
-//	qk_protocol_register_callback(qk_protocol_comm,
-//								  QK_PROTOCOL_CALLBACK_SENDBYTES,
-//								  protocol_callback_send_bytes);
-
-//	qk_gpio_set_mode(BT_EN, QK_GPIO_MODE_OUTPUT);
-//	qk_gpio_set_mode(BT_STAT, QK_GPIO_MODE_INPUT);
+	// Configure GPIO
 	qk_gpio_set_mode(BT_MODE, QK_GPIO_MODE_OUTPUT);
 	qk_gpio_set_mode(BT_RST, QK_GPIO_MODE_OUTPUT);
-
-	qk_gpio_set_pin(BT_MODE, LOW);
-	qk_gpio_set_pin(BT_RST, HIGH);
 
 	qk_gpio_set_mode(COMM_TX, QK_GPIO_MODE_OUTPUT);
 	qk_gpio_set_mode(COMM_RX, QK_GPIO_MODE_INPUT);
 
-	qk_uart_enable(COMM_UART_ID, true);
+	// Enable UART
+	qk_uart_enable(COMM_UART_ID);
+
+	// Reset with MODE=1
+	qk_gpio_set_pin(BT_MODE, HIGH);
+	qk_gpio_set_pin(BT_RST, LOW);
+	delay_ms(50);
+	qk_gpio_set_pin(BT_RST, HIGH);
+	delay_ms(80);
+
+	// Configure serial port parameters (38400, 1 stop bit, no parity)
+	qk_uart_write(QK_UART_1, "AT+UART=38400,1,0\r\n", 19);
+	delay_ms(200);
+
+	// Reset with MODE=0
+	qk_gpio_set_pin(BT_MODE, LOW);
+	qk_gpio_set_pin(BT_RST, LOW);
+	delay_ms(50);
+	qk_gpio_set_pin(BT_RST, HIGH);
+	delay_ms(80);
+}
+
+void qk_setup()
+{
+	qk_log_set_levels(QK_LOG_LEVEL_DEBUG);
+
+	qk_board_set_name("Bluetooth 2.0");
+
+	qk_core_register_callback(QK_CORE_CALLBACK_APP,
+							  core_callback_app);
+
+	qk_protocol_register_callback(qk_protocol_comm,
+								  QK_PROTOCOL_CALLBACK_SENDBYTES,
+								  protocol_callback_send_bytes);
+
+	hc05_init();
 }
 
 int main()
 {
 	qk_init();
-	qk_log_set_levels(QK_LOG_LEVEL_DEBUG);
-
-	while(1)
-	{
-		qk_run();
-
-		qk_board_led_blink(1, 500);
-
-
-
-		QK_LOG_DEBUG("ba:%d\n", qk_uart_bytes_available(COMM_UART_ID));
-
-		char str[7] = "hello\n";
-		qk_uart_write(QK_UART_1, &str, 6);
-
-		if(qk_uart_bytes_available(COMM_UART_ID) > 0)
-		{
-			char rxbuf[16];
-			qk_uart_read(COMM_UART_ID, rxbuf, 16);
-			QK_LOG_DEBUG("rx: %s\n", rxbuf);
-		}
-
-//		char str[4] = "hi\r\n";
-//		qk_uart_write(COMM_UART_ID, (uint8_t*)str, 4);
-
-//		qk_run();
-//		qk_board_led_blink(2, 100);
-//
-//		if(qk_uart_bytes_available(COMM_UART_ID) > 0)
-//		{
-//			char rxbuf[16];
-//			qk_uart_read(COMM_UART_ID, rxbuf, 16);
-//			QK_LOG_DEBUG("rx: %s\n", rxbuf);
-//		}
-//
-//		char str[4] = "hi\r\n";
-//
-//		qk_uart_write(COMM_UART_ID, (uint8_t*)str, 4);
-//
-//		delay_ms(1000);
-	}
+	qk_loop();
 }
