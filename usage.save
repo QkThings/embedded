@@ -1,3 +1,4 @@
+ls
 . undef_all ; export TARGET=arduino.uno; export LIB=qkperipheral; make clean; make lib
 . undef_all ; export TARGET=arduino.uno; export LIB=qkprogram; make clean; make lib
 . undef_all ; export TARGET=arduino.uno; export APP=test/allfeatures; make clean; make app
@@ -9,15 +10,6 @@
 . undef_all ; export TARGET=efm32.comm_bt_2_0; make upload PORT=/dev/ttyUSB0 FILE=board/comm_bluetooth_2_0/app/slave/bin/app.bin
 
 . undef_all ; export TARGET=chibios.stm32p107; export LIB=qkprogram; make clean; make lib
-
-. undef_all ; export TARGET=efm32.dev_tg; export LIB=qkperipheral; make clean; make lib
-. undef_all ; export TARGET=efm32.dev_tg; export LIB=qkprogram; make clean; make lib
-. undef_all ; export TARGET=efm32.dev_tg; export APP=test/test_adc; make clean; make app
-. undef_all ; export TARGET=efm32.dev_tg; make upload PORT=/dev/ttyUSB0 FILE=test/test_adc/bin/app.bin
-
-
-. undef_all ; export TARGET=efm32.dev_tg; export APP=test/test_i2c; make clean; make app
-. undef_all ; export TARGET=efm32.dev_tg; make upload PORT=/dev/ttyUSB0 FILE=test/test_i2c/bin/app.bin
 
 
 reset; python build.py -a board/comm_bluetooth_2_0/app/slave -t efm32.comm_bt_2_0 -b comm -v -c
