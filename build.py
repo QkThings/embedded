@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from os import environ
+from os import environ, path
 from qkthings.utils import cmd
 
 def unset_all():
@@ -14,6 +14,7 @@ def build():
 	parser.add_argument("-a","--app", required=True, help='app path')
 	parser.add_argument("-t","--target", required=True, help='app path')
 	parser.add_argument("-b","--board", required=True, help='comm or device')
+	parser.add_argument("-u","--upload", action="store_true", default=False, help='verbose')
 	parser.add_argument("-c","--clean", action="store_true", default=False, help='verbose')
 	parser.add_argument("-v","--verbose", action="store_true", default=False, help='verbose')
 	args = parser.parse_args()
@@ -41,6 +42,9 @@ def build():
 		cmd(["colormake","clean","APP=%s" % args.app,"BUILD_TARGET=%s" % build_target], args.verbose)
 
 	cmd(["colormake","app","APP=%s" % args.app,"BUILD_TARGET=%s" % build_target], args.verbose)
+
+	if args.upload:
+		cmd(["colormake", "upload", "FILE=%s" % path.join(args.app,"bin/app.bin")], args.verbose)
 
 if __name__ == "__main__":
 	build()

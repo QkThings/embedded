@@ -15,7 +15,7 @@ uint16_t	 counter = 10;
 void sample_callback()
 {
 	// Send a debug string	
-	//QK_LOG_DEBUG("test_sample() [called %d times]", counter++);
+	QK_LOG_DEBUG("%s [called %d times]", __FUNCTION__, counter++);
 	
 	// Generate some data
 	time += 0.01;
@@ -35,8 +35,7 @@ void sample_callback()
   		evt_args[0] = 123.123+(float)counter;
   		evt_args[1] = 456.456+(float)counter;
 		qk_event_set_args(0, evt_args, 2);
-		//qk_event_generate(0, "event fired with some arguments");	
-  		//qk_event_generate(0, evt_args, 2, "event fired with some arguments");	
+		qk_event_generate(0, "event fired with some arguments");	
 	}
 	if((counter % 25) == 0)
 	{
@@ -44,8 +43,7 @@ void sample_callback()
 		evt_args[1] = 2.456+(float)counter;
 		evt_args[2] = 3.456+(float)counter;
 		qk_event_set_args(0, evt_args, 3);
-		//qk_event_generate(0, "arguments: %0, %1 and %2.");	
-//		qk_event_generate(0, evt_args, 3, );
+		qk_event_generate(0, "arguments: %0, %1 and %2.");	
 	}
 }
 
@@ -53,14 +51,14 @@ void action_callback(qk_action_id id)
 {
 	if(id == 0)
 		qk_board_led_set(qk_action_get_value_b(0));
-        //hal_setLED(qk_action_get_value_b(0));
 }
 
 void qk_setup()
 {
-	qk_log_set_levels(QK_LOG_LEVEL_DEBUG | QK_LOG_LEVEL_ERROR);
+	//qk_log_set_levels(QK_LOG_LEVEL_DEBUG | QK_LOG_LEVEL_ERROR);
+	qk_log_set_levels(0);
 
-	qk_board_set_name("HelloArduino");
+	qk_board_set_name("allfeatures");
 	qk_board_set_version(0x1234);
 
 	qk_config_set_buffer(cfg_buf, CFG_COUNT);
@@ -115,11 +113,10 @@ void qk_setup()
 
 	qk_sampling_set_callback(QK_SAMPLING_CALLBACK_SAMPLE, sample_callback);	
 	qk_sampling_set_frequency(10);
-	
-//	qk_clock_set_mode(QK_CLOCK_MODE_FAST);
 }
 
 int main(void)
 {
 	return qk_main();
 }
+

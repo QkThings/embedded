@@ -226,7 +226,7 @@ endif
 # FLAGS
 ####################################################################
 
-CFLAGS += -O$(OPTIMIZE) -g3 -Wall
+CFLAGS += -O$(OPTIMIZE) -g3 -Wall -Werror-implicit-function-declaration 
 CFLAGS += -DINIT_CLKFREQ=$(INIT_CLKFREQ)
 CFLAGS += $(addprefix -D, $(DEFINES))
 LIBS += -lm

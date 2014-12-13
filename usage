@@ -5,11 +5,12 @@
 
 . undef_all ; export TARGET=efm32.comm_bt_2_0; export LIB=qkperipheral; make clean; make lib
 . undef_all ; export TARGET=efm32.comm_bt_2_0; export LIB=qkprogram; make clean; make lib BUILD_TARGET=BUILD_COMM
-. undef_all ; export TARGET=efm32.comm_bt_2_0; export APP=board/comm_bluetooth_2_0/app/slave; make clean; make app
-. undef_all ; export TARGET=efm32.comm_bt_2_0; make upload PORT=/dev/ttyUSB0 FILE=board/comm_bluetooth_2_0/app/slave/bin/app.bin
+. undef_all ; export TARGET=efm32.comm_bt_2_0; export APP=board/comm_bt_2_0/app/slave; make clean; make app
+. undef_all ; export TARGET=efm32.comm_bt_2_0; make upload PORT=/dev/ttyUSB0 FILE=board/comm_bt_2_0/app/slave/bin/app.bin
 
 . undef_all ; export TARGET=chibios.stm32p107; export LIB=qkprogram; make clean; make lib
 
 
-reset; python build.py -a board/comm_bluetooth_2_0/app/slave -t efm32.comm_bt_2_0 -b comm -v -c
+reset; python build.py -a board/comm_bt_2_0/app/slave -t efm32.comm_bt_2_0 -b comm -v -c -u
+reset; python build.py -a test/allfeatures -t efm32.dev_tg -b device -v -c -u
 

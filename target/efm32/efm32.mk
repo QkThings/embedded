@@ -125,6 +125,9 @@ LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
 # UPLOAD
 ###############################################################################
 EFM32_LOADER=/home/$(USER)/qkthings_local/build/qt/efm32_loader/release/efm32_loader
-$(info BOOT_POL = $(BOOT_POL))
+ifeq  ($(BOOT_POL),)
+$(error BOOT_POL not defined)
+endif
+PORT ?= /dev/ttyUSB0
 UPLOAD_CMD = $(EFM32_LOADER) $(PORT) $(FILE) $(BOOT_POL)
 

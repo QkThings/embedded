@@ -7,3 +7,4 @@
 #define ACT_COUNT 2
 
 #endif	/* ALLFEATURES_H */
+

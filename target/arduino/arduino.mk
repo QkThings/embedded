@@ -60,6 +60,7 @@ CFLAGS += -Wall -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 ###############################################################################
 #PORT = COM19
 #UPLOAD_RATE = 115200
+PORT ?= /dev/ttyACM0
 AVRDUDE = $(TOOLCHAIN_DIR)/cpu/avr/linux/avrdude
 AVRDUDE_CONF = $(TOOLCHAIN_DIR)/platform/arduino/common
 AVRDUDE_PROGRAMMER = stk500
