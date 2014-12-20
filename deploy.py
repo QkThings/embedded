@@ -23,7 +23,11 @@ def unset_all():
 	environ["TEST"] = ""
 	environ["APP"] = ""
 
-def deploy(verbose = False):
+def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-v","--verbose", action="store_true", default=False, help='verbose')
+	args = parser.parse_args()
+
 	print "=== Deploy embedded"
 	rootdir = getcwd()
 
@@ -31,18 +35,15 @@ def deploy(verbose = False):
 		for lib in libs:
 			chdir(path.join(rootdir,lib))
 			print " > Deploy %s %s" % (target, lib)
-			cmd(["python", "deploy.py"], verbose)		
+			cmd(["python", "deploy.py"], args.verbose)		
 
 	for target in targets:
 		for lib in libs:	
 			chdir(rootdir)
 			unset_all()
 			print " > Build %s %s" % (target, lib)
-			cmd(["make","clean","LIB=%s" % lib,"TARGET=%s" % target], verbose)
-			cmd(["make","lib","LIB=%s" % lib,"TARGET=%s" % target], verbose)
+			cmd(["make","clean","LIB=%s" % lib,"TARGET=%s" % target], args.verbose)
+			cmd(["make","lib","LIB=%s" % lib,"TARGET=%s" % target], args.verbose)
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser()
-	parser.add_argument("-v","--verbose", action="store_true", default=False, help='verbose')
-	args = parser.parse_args()
-	deploy(args.verbose)
+	main()
