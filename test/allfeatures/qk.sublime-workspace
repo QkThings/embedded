@@ -1,0 +1,240 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"QK_SAMPLING",
+				"QK_SAMPLING_CALLBACK_START	qk_sampling_callback"
+			],
+			[
+				"qk_sampling_set",
+				"qk_sampling_set_callback(qk_sampling_callback id, void (*fnc)(void))	void"
+			],
+			[
+				"QK_LOG",
+				"QK_LOG_LEVEL_WARNING	QK_LOG_LEVEL"
+			],
+			[
+				"qk_log_set",
+				"qk_log_set_levels(qk_log_mask mask)	void"
+			],
+			[
+				"qk_board_led",
+				"qk_board_led_blink(unsigned int n, unsigned int msec)	void"
+			],
+			[
+				"qk_board_le",
+				"qk_board_led_blink(unsigned int n, unsigned int msec)	void"
+			],
+			[
+				"QK_CONFIG_TYP",
+				"QK_CONFIG_TYPE_TIME	qk_config_type"
+			],
+			[
+				"url_parse",
+				"url_parse(url_parser *parser, const char *url)	void"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"in",
+				"inline-block"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control:",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Mario/AppData/Roaming/Sublime Text 2/Packages/User/SublimeClang.sublime-settings",
+		"/C/Users/Mario/AppData/Roaming/Sublime Text 2/Packages/SublimeClang/SublimeClang.sublime-settings",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/test/allfeatures/qk.sublime-project",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/test/allfeatures/allfeatures.c",
+		"/C/Users/Mario/Copy/vm_shared_cloud/c/main.c",
+		"/C/MinGW/include/stdio.h",
+		"/C/Users/Mario/Copy/vm_shared_cloud/cpp/main.cpp",
+		"/C/Octave/Octave-4.0.0/README.html",
+		"/C/Users/Mario/Copy/hardware/eagle/bom-ex/partsdb.txt",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/software/qkide/deploy.py",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/software/qkdaemon_gui/main.cpp",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/software/qkdaemon_gui/mainwindow.cpp",
+		"/C/Users/Mario/Copy/qkthings/qkapi.txt",
+		"/C/Users/Mario/Copy/programming/octave/ma.m",
+		"/C/Users/Mario/Copy/vm_shared_cloud/python/scipy/test_scipy.py",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/software/qkdaemon_gui/qkconnectworker.cpp",
+		"/C/Users/Mario/Copy/vm_shared_cloud/python/test_pyqtgraph.py",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/qkdsp/examples/example_qkdsp_ma.c",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/qkdsp/lib/qk_iir.c",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/qkdsp/lib/qk_fir.c",
+		"/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/qkdsp/lib/qk_avg.c",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myexpress/views/index.jade",
+		"/C/Users/Mario/AppData/Local/Temp/7zO15A.tmp/index.html",
+		"/C/Users/Mario/AppData/Local/Temp/7zO7C4C.tmp/index.html",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myexpress/public/css/style.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myexpress/public/css/custom.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/views/index.jade",
+		"/C/Users/Mario/AppData/Local/Temp/Temp1_12115.zip/html/12115.htm",
+		"/C/Users/Mario/Copy/web/html/html5up-spectral/elements.html",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/css/style.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/routes/index.js",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/package.json",
+		"/C/Users/Mario/Desktop/fft.c",
+		"/C/Users/Mario/Documents/irs2014_print.html",
+		"/C/Users/Mario/Copy/web/html/templated-linear/index.html",
+		"/C/Users/Mario/Copy/web/html/html5up-spectral/generic.html",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/css/bootstrap.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/css/bootstrap.min.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/app.js",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/views/error.jade",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/routes/users.js",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/css/addon.css",
+		"/C/Users/Mario/AppData/Local/Temp/Temp1_12115.zip/css/12115.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/css/bootstrap-theme.min.css",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/views/layout.jade",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/views/index.html",
+		"/C/Users/Mario/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/Mario/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/C/Users/Mario/Copy/vm_shared_cloud/nodejs/myapp/public/stylesheets/style.css"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"input",
+			"Open sans",
+			"Name"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.clang":
+	{
+		"height": 169.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 261.0,
+	"status_bar_visible": true
+}

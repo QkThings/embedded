@@ -1,0 +1,12 @@
+{
+	"folders":
+	[
+		{
+			"path": "/C/Users/Mario/Copy/vm_shared_cloud/qkthings/embedded/test/allfeatures"
+		}
+	],
+  "sublimeclang_options":
+  [
+    "-I${folder:${project_path:my_widget.sublime-project}}/**"
+  ]
+}

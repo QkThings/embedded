@@ -44,19 +44,16 @@ endif
 ###############################################################################
 
 ENERGYMICRO = $(TOOLCHAIN_DIR)/platform/efm32/common
+
 #WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2013q1
 #LINUXCS    ?= /home/mribeiro/gcc-arm-none-eabi-4_7-2013q1
 
-TOOLDIR := $(TOOLCHAIN_DIR)/cpu/arm/linux
+TOOLDIR := $(TOOLCHAIN_DIR)/cpu/arm/win
 
-CC      = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-gcc$(QUOTE)
-LD      = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-ld$(QUOTE)
-AR      = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-ar$(QUOTE)
-OBJCOPY = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-objcopy$(QUOTE)
-DUMP    = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-objdump$(QUOTE)
-PSIZE	= $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-size$(QUOTE)
+GNU_INSTALL_ROOT = $(TOOLCHAIN_DIR)/cpu/arm/win/bin
+GNU_PREFIX = arm-none-eabi-
 
-INCLUDE_DIR += \
+INCLUDE_DIRS += \
 $(ENERGYMICRO)/CMSIS/Include \
 $(ENERGYMICRO)/emlib/inc
 
@@ -64,12 +61,10 @@ ifeq ($(FAMILY),)
 $(error EFM32 FAMILY not defined)
 endif
 
-
-
 ifeq ($(FAMILY), EFM32G)
 INCLUDE_DIR += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Include
-C_SRC += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/system_efm32g.c
-S_SRC += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/GCC/startup_efm32g.S
+C_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/system_efm32g.c
+S_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/GCC/startup_efm32g.S
 ifeq ($(HAS_BOOT),1)
 LINKER_SCRIPT = $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/GCC/efm32g_boot.ld
 else
@@ -78,13 +73,13 @@ endif
 endif
 
 ifeq ($(FAMILY), EFM32TG)
-INCLUDE_DIR += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Include
-C_SRC += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/system_efm32tg.c
-S_SRC += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/GCC/startup_efm32tg.S
+INCLUDE_DIRS += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Include
+C_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/system_efm32tg.c
+S_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/GCC/startup_efm32tg.S
 ifeq ($(HAS_BOOT),1)
 LINKER_SCRIPT = $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/GCC/efm32tg_boot.ld
 else
-LINKER_SCRIPT = $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/GCC/efm32tg.ld
+LINKER_SCRIPT = $(ENERGYMICRO)/Device/EnergyMicro/EFM32TG/Source/GCC/efm32tg.ld$
 endif
 endif
 
@@ -124,10 +119,13 @@ LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
 ###############################################################################
 # UPLOAD
 ###############################################################################
-EFM32_LOADER=/home/$(USER)/qkthings_local/build/qt/efm32_loader/release/efm32_loader
+#EFM32_LOADER=/home/$(USER)/qkthings_local/build/qt/efm32_loader/release/efm32_loader
+#EFM32_LOADER="C:\Users\mribeiro\qkthings_local\build\qt\efm32_loader\release\efm32_loader.exe"
+EFM32_LOADER=/C/Users/mribeiro/qkthings_local/build/qt/efm32_loader/release/efm32_loader.exe
 ifeq  ($(BOOT_POL),)
 $(error BOOT_POL not defined)
 endif
-PORT ?= /dev/ttyUSB0
-UPLOAD_CMD = $(EFM32_LOADER) $(PORT) $(FILE) $(BOOT_POL)
+#PORT ?= /dev/ttyUSB0
+PORT ?= COM5
+UPLOAD_CMD = $(EFM32_LOADER) $(PORT) "$(FILE)" $(BOOT_POL)
 

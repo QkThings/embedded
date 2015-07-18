@@ -1,0 +1,8 @@
+cls
+make clean BUILD_DIR=qkperipheral/build/efm32/dev_tg
+make clean BUILD_DIR=qkprogram/build/efm32/dev_tg/device
+make clean BUILD_DIR=app/minimal/build
+
+make lib LIB=qkperipheral/qkperipheral.mk TARGET=efm32.dev_tg BUILD_DIR=qkperipheral/build/efm32/dev_tg
+make lib LIB=qkprogram/qkprogram.mk TARGET=efm32.dev_tg BUILD_DIR=qkprogram/build/efm32/dev_tg/device BUILD_TARGET=BUILD_DEVICE USE_PERIPH=1
+make app APP=app/minimal/minimal.mk TARGET=efm32.dev_tg BUILD_DIR=app/minimal/build

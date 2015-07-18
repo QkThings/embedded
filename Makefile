@@ -1,344 +1,178 @@
-#
-# QkThings LICENSE
-# The open source framework and modular platform for smart devices.
-# Copyright (C) 2014 <http://qkthings.com>
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-
 .SUFFIXES:
-.PHONY: lib app test clean upload savetarget
-
-EMB_DIR = .
-#TOOLCHAIN_DIR = shared/toolchain
-TOOLCHAIN_DIR = /home/$(USER)/qkthings_local/toolchain
-$(info TOOLCHAIN_DIR = $(TOOLCHAIN_DIR))
-
-####################################################################
-# INIT                                                      
-####################################################################
-
-#PRINT_MESSAGES = 1
+.PHONY: lib app clean upload
 
 ifeq ($(MAKECMDGOALS),)
 $(error Make what?)
 endif
 
-define init_lib
-PROJECT_NAME = $(LIB)
-BUILD_DIR    = $(LIB)/build
-endef
+PROJECT_NAME = name
+export OUTPUT_FILENAME
 
-define init_test
-PROJECT_NAME = $(TEST)
-BUILD_DIR    = test/build
-endef
+MAKEFILE_NAME := $(MAKEFILE_LIST)
+MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) ) 
 
-define init_app
-PROJECT_NAME ?= app
-BUILD_DIR    = $(APP)
-endef
+ifeq ($(OS),Windows_NT)
+#$(info WINDOWS)
+OS_NAME = win
+else
+#$(info POSIX)
+OS_NAME = posix
+endif
+
+MK = mkdir -p
+RM = rm -rf
+
+ifeq ($(VERBOSE), 1)
+NO_ECHO :=
+else
+NO_ECHO := @
+endif
+
+TARGET_DIR = target
+TOOLCHAIN_DIR = C:/Users/mribeiro/qkthings_local/toolchain
+
+GNU_INSTALL_ROOT = C:/MinGW/bin
+GNU_PREFIX =
+
+BUILD_DIR ?= build
+OBJ_DIR = $(BUILD_DIR)/obj
+LIB_DIR = $(BUILD_DIR)/lib
+BIN_DIR = $(BUILD_DIR)/bin
+
+BUILD_DIRS = $(BUILD_DIR) $(sort $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR))
+
+OUT_FORMAT = binary
+OPTIMIZE = s
+
+ARFLAGS = rcs
 
 ifeq ($(MAKECMDGOALS), lib)
 ifneq ($(LIB),)
-$(info Builing LIB = $(LIB))
-$(eval $(call init_lib,))
+$(info Builing LIB   = $(LIB))
 else
 $(error LIB must be defined)
 endif
 endif
 
-ifeq ($(MAKECMDGOALS), test)
-ifneq ($(TEST),)
-$(info Builing TEST = $(TEST))
-$(eval $(call init_test,))
-else
-$(error TEST must be defined)
-endif
-endif
-
 ifeq ($(MAKECMDGOALS), app)
 ifneq ($(APP),)
-$(info Builing APP = $(APP))
-$(eval $(call init_app,))
+$(info Builing APP   = $(APP))
 else
 $(error APP must be defined)
 endif
 endif
 
-ifeq ($(MAKECMDGOALS), clean)
-ifeq ($(LIB),)
-ifeq ($(TEST),)
-ifeq ($(APP),)
-$(error You must define LIB, TEST or APP)
-else
-$(info Cleaning APP $(APP))
-$(eval $(call init_app,))
-endif
-else
-$(info Cleaning TEST $(TEST))
-$(eval $(call init_test,))
-endif
-else
-$(info Cleaning LIB $(LIB))
-$(eval $(call init_lib,))
-endif
+ifneq ($(VERBOSE),)
+$(info BUILD_DIR     = $(BUILD_DIR))
 endif
 
-$(info PROJECT_NAME = $(PROJECT_NAME))
-$(info BUILD_DIR    = $(BUILD_DIR))
+ifneq ($(TARGET), )
 
-OBJ_DIR = $(BUILD_DIR)/obj
-BIN_DIR = $(BUILD_DIR)/bin
-LIB_DIR = $(BUILD_DIR)/lib/$(TARGET_NAME)/$(TARGET_VARIANT)
-
-ifeq ($(TARGET),)
-  -include target/saved.target
-  ifeq ($(TARGET),)
-    $(info TARGET not defined, using default target "arduino.uno")
-    TARGET=arduino.uno
-  else
-    $(info TARGET not defined, using saved target $(TARGET))
-  endif
-else
-  ${info TARGET  = $(TARGET)}
+ifneq ($(VERBOSE),)
+$(info TOOLCHAIN_DIR = $(TOOLCHAIN_DIR))
+$(info TARGET_DIR    = $(TARGET_DIR))
+$(info TARGET        = $(TARGET))
 endif
 
-get_target_name = $(firstword $(subst ., ,$1))
-get_target_variant = $(or $(word 2,$(subst ., ,$1)),$(value 2))
+get_target_cpu = $(firstword $(subst ., ,$1))
+get_target_board = $(or $(word 2,$(subst ., ,$1)),$(value 2))
 
-TARGET_NAME=$(call get_target_name,$(TARGET))
-TARGET_VARIANT=$(call get_target_variant,$(TARGET),$(TARGET_NAME))
+TARGET_CPU=$(call get_target_cpu,$(TARGET))
+TARGET_BOARD=$(call get_target_board,$(TARGET),$(TARGET_NAME))
 
-TARGET_BOARD=target/$(TARGET_NAME)/board/$(TARGET_VARIANT).mk
-TARGET_CPU=target/$(TARGET_NAME)/$(TARGET_NAME).mk
-TARGET_GLOBAL= $(TARGET_BOARD) $(TARGET_CPU)
+include $(TARGET_DIR)/$(TARGET_CPU)/board/$(TARGET_BOARD).mk
+include $(TARGET_DIR)/$(TARGET_CPU)/$(TARGET_CPU).mk
 
-QUOTE :="
-
-# Try autodetecting the environment
-ifeq ($(SHELLNAMES),)
-  # Assume we are making on a Linux platform
-else
-  ifneq ($(COMSPEC),)
-    # Assume we are making on a mingw/msys/cygwin platform running on Windows
-    # This is a convenient place to override TOOLDIR, DO NOT add trailing
-    # whitespace chars, they do matter !
-    ifeq ($(findstring cygdrive,$(shell set)),)
-      # We were not on a cygwin platform
-      NULLDEVICE := NUL
-    endif
-  else
-    # Assume we are making on a Windows platform
-    # This is a convenient place to override TOOLDIR, DO NOT add trailing
-    # whitespace chars, they do matter !
-    SHELL      := $(SHELLNAMES)
-    RMDIRS     := rd /s /q
-    RMFILES    := del /s /q
-    ALLFILES   := \*.*
-    NULLDEVICE := NUL
-  endif
 endif
 
-RMDIRS     := rm -rf
-RMFILES    := rm -rf
-ALLFILES   := /*.*
-NULLDEVICE := /dev/null
-SHELLNAMES := $(ComSpec)$(COMSPEC)
-
-####################################################################
-# DEFINITIONS                                                      
-####################################################################
-
-OPTIMIZE = s
-OFORMAT = binary
-
-####################################################################
-# MAKE LIB
-####################################################################
 ifeq ($(MAKECMDGOALS),lib)
-  include $(PROJECT_NAME)/build/$(PROJECT_NAME).mk
+  include $(LIB)
 else
-####################################################################
-# MAKE APP
-####################################################################
 ifeq ($(MAKECMDGOALS),app)
-include $(APP)/app.mk
-INCLUDE_DIR += \
-$(APP)
-C_SRC_DIR += \
-$(APP)
-
-$(info BUILD_TARGET=$(BUILD_TARGET))
-ifeq ($(BUILD_TARGET),)
-  $(error BUILD_TARGET not defined (BUILD_COMM or BUILD_DEVICE?))
-endif
-DEFINES += $(BUILD_TARGET)
-
-
-QKLIB_PATHS += $(addsuffix /build/lib/$(TARGET_NAME)/$(TARGET_VARIANT), $(EMB_DIR)/qkperipheral)
-QKLIB_INCLUDES += $(addsuffix /include, $(EMB_DIR)/qkperipheral)
-QKLIB_INCLUDES += $(addsuffix /include/board/$(TARGET_NAME)/$(TARGET_VARIANT), $(EMB_DIR)/qkperipheral)
-
-
-ifeq ($(BUILD_TARGET), BUILD_DEVICE)
-#LIB_DIR := $(LIB_DIR)/device
-QKLIB_PATHS += $(addsuffix /build/lib/$(TARGET_NAME)/$(TARGET_VARIANT)/device, $(EMB_DIR)/qkprogram)
-endif
-ifeq ($(BUILD_TARGET), BUILD_COMM)
-QKLIB_PATHS += $(addsuffix /build/lib/$(TARGET_NAME)/$(TARGET_VARIANT)/comm, $(EMB_DIR)/qkprogram)
-endif
-QKLIB_INCLUDES += $(addsuffix /include, $(EMB_DIR)/qkprogram)
-
-QK_LIBS = qkprogram qkperipheral
-
-LIBS += $(addprefix -L, $(QKLIB_PATHS)) #$(addprefix -l, $(QKLIB_NAMES))
-LIBS += $(addprefix -l, $(QK_LIBS))
-
-INCLUDE_DIR += $(QKLIB_INCLUDES)
-
-include $(TARGET_GLOBAL)
-include $(EMB_DIR)/qkperipheral/build/target/$(TARGET_NAME)/board/$(TARGET_VARIANT).mk
-
-else
-####################################################################
-# MAKE UPLOAD
-####################################################################
-ifeq ($(MAKECMDGOALS),upload)
-include $(TARGET_GLOBAL)
-endif
-
+  include $(APP)
 endif
 endif
 
-####################################################################
-# FLAGS
-####################################################################
+CC       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)gcc"
+AS       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)as"
+AR       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)ar"
+LD       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)ld"
+NM       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)nm"
+OBJDUMP  		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)objdump"
+OBJCOPY  		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)objcopy"
+SIZE    		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)size"
 
-CFLAGS += -O$(OPTIMIZE) -g3 -Wall -Werror-implicit-function-declaration 
-CFLAGS += -DINIT_CLKFREQ=$(INIT_CLKFREQ)
+
+CFLAGS += -O$(OPTIMIZE) -g3 -Wall 
+CFLAGS += -Werror-implicit-function-declaration 
 CFLAGS += $(addprefix -D, $(DEFINES))
-LIBS += -lm
-ARFLAGS = rcs
 
-####################################################################
-# CREATE/REMOVE DIRECTORIES
-####################################################################
+INCLUDEPATHS += $(addsuffix ", $(addprefix -I", $(INCLUDE_DIRS)))
+C_SRC_FILES += $(wildcard $(addsuffix /*.c, $(C_SRC_DIRS)))
 
-# Create directories and do a clean which is compatible with parallell make
-$(shell mkdir -p $(OBJ_DIR)>$(NULLDEVICE) 2>&1)
-ifneq ($(MAKECMDGOALS),lib)
-$(shell mkdir -p $(BIN_DIR)>$(NULLDEVICE) 2>&1)
-endif
-ifeq ($(MAKECMDGOALS),lib)
-  $(shell mkdir -p $(LIB_DIR)>$(NULLDEVICE) 2>&1)
-endif
-ifeq (clean,$(findstring clean, $(MAKECMDGOALS)))
-  ifneq ($(filter $(MAKECMDGOALS),all debug release),)
-    $(shell $(RMFILES) $(OBJ_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-    $(shell $(RMFILES) $(BIN_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-    $(shell $(RMFILES) $(LIB_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-  endif
-endif
-
-###############################################################################
-# FILES
-###############################################################################
-
-INCLUDEPATHS += $(addprefix -I, $(INCLUDE_DIR))
-C_SRC += $(wildcard $(addsuffix /*.c, $(C_SRC_DIR)))
-
-C_FILES = $(notdir $(C_SRC) )
-S_FILES = $(notdir $(S_SRC) $(s_SRC) )
-C_PATHS = $(sort $(dir $(C_SRC) ) )
-S_PATHS = $(sort $(dir $(S_SRC) $(s_SRC) ) )
+C_FILES = $(notdir $(C_SRC_FILES) )
+S_FILES = $(notdir $(S_SRC_FILES) $(s_SRC_FILES) )
+C_PATHS = $(sort $(dir $(C_SRC_FILES) ) )
+S_PATHS = $(sort $(dir $(S_SRC_FILES) $(s_SRC_FILES) ) )
 C_OBJS = $(addprefix $(OBJ_DIR)/, $(C_FILES:.c=.o))
 C_DEPS = $(addprefix $(OBJ_DIR)/, $(C_FILES:.c=.d))
-S_OBJS = $(if $(S_SRC), $(addprefix $(OBJ_DIR)/, $(S_FILES:.S=.o)))
-s_OBJS = $(if $(s_SRC), $(addprefix $(OBJ_DIR)/, $(S_FILES:.s=.o)))
+S_OBJS = $(if $(S_SRC_FILES), $(addprefix $(OBJ_DIR)/, $(S_FILES:.S=.o)))
+s_OBJS = $(if $(s_SRC_FILES), $(addprefix $(OBJ_DIR)/, $(S_FILES:.s=.o)))
 OBJS = $(C_OBJS) $(S_OBJS) $(s_OBJS)
 
 vpath %.c $(C_PATHS)
-vpath %.s $(S_PATHS)
+vpath %.s $(s_PATHS)
 vpath %.S $(S_PATHS)
 
-###############################################################################
-# BUILD
-###############################################################################
-#all: 	lib
-lib:	$(LIB_DIR)/lib$(PROJECT_NAME).a
-app:    $(BIN_DIR)/$(PROJECT_NAME).bin
-test:	app
+#$(info C_FILES=$(C_FILES))
+#$(info C_PATHS=$(C_PATHS))
+#$(info OBJS=$(OBJS))
+
+lib:	$(BUILD_DIRS) $(LIB_DIR)/lib$(PROJECT_NAME).a
+app:	$(BUILD_DIRS) $(BIN_DIR)/$(PROJECT_NAME).bin
+
+clean:
+	$(RM) $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR)
+
+# Create build directories
+$(BUILD_DIRS):
+	$(NO_ECHO)$(MK) $@
 
 # Create objects from C SRC files
 $(OBJ_DIR)/%.o: %.c
 	@echo Compiling $<
-	$(CC) $(CFLAGS) $(INCLUDEPATHS) -c -o $@ $<
+	$(NO_ECHO)$(CC) $(CFLAGS) $(INCLUDEPATHS) -c -o $@ $<
 
 # Assemble .s/.S files
 $(OBJ_DIR)/%.o: %.s
 	@echo Assembling $<
-	$(CC) $(ASMFLAGS) $(INCLUDEPATHS) -c -o $@ $<
+	$(NO_ECHO)$(CC) $(ASMFLAGS) $(INCLUDEPATHS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o: %.S
 	@echo Assembling $<
-	$(CC) $(ASMFLAGS) $(INCLUDEPATHS) -c -o $@ $<
+	$(NO_ECHO)$(CC) $(ASMFLAGS) $(INCLUDEPATHS) -c -o $@ $<
 
 # Link
 $(BIN_DIR)/$(PROJECT_NAME).out: $(OBJS)
 	@echo Linking target: $@
-	$(CC) $(LDFLAGS) $(INCLUDEPATHS) $(OBJS) $(LIBS) -o $(BIN_DIR)/$(PROJECT_NAME).out
-	
+	$(NO_ECHO)$(CC) $(LDFLAGS) $(INCLUDEPATHS) $(OBJS) $(LIBS) -o $(BIN_DIR)/$(PROJECT_NAME).out
+
 # Create static library
 $(LIB_DIR)/lib$(PROJECT_NAME).a: $(OBJS)
 	@echo Creating static library: $@
-	$(AR) $(ARFLAGS) $(LIB_DIR)/lib$(PROJECT_NAME).a $(OBJS)
+	$(NO_ECHO)$(AR) $(ARFLAGS) $(LIB_DIR)/lib$(PROJECT_NAME).a $(OBJS)
 
 # Create binary file
 $(BIN_DIR)/$(PROJECT_NAME).bin: $(BIN_DIR)/$(PROJECT_NAME).out
 	@echo Creating binary file
-	$(OBJCOPY) -O $(OFORMAT) $(BIN_DIR)/$(PROJECT_NAME).out $(BIN_DIR)/$(PROJECT_NAME).bin
-	$(PSIZE) $(BIN_DIR)/$(PROJECT_NAME).out
+	$(OBJCOPY) -O $(OUT_FORMAT) $(BIN_DIR)/$(PROJECT_NAME).out $(BIN_DIR)/$(PROJECT_NAME).bin
+	$(SIZE) $(BIN_DIR)/$(PROJECT_NAME).out
 # Uncomment next line to produce assembly listing of entire program
 #	$(DUMP) -h -S -C $(BIN_DIR)/$(PROJECT_NAME).out>$(LST_DIR)/$(PROJECT_NAME)out.lst
 
-clean:
-ifeq ($(filter $(MAKECMDGOALS),all ),)
-	$(RMDIRS) $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR)
-endif
-
-# include auto-generated dependency files (explicit rules)
-ifneq (clean,$(findstring clean, $(MAKECMDGOALS)))
--include $(C_DEPS)
-endif
-
-savetarget:
-	-@rm -f target/saved.target
-	@echo "saving target"
-	@echo >target/saved.target "TARGET = $(TARGET)"
-
-###############################################################################
-# UPLOAD
-###############################################################################
-ifeq ($(MAKECMDGOALS),upload)
-  ifeq ($(PORT),)
-    $(error PORT must be defined)
-  endif
-  ifeq ($(FILE),)
-    $(error FILE must be defined)
-  endif
-endif
 upload:
-	$(UPLOAD_CMD)
+	$(NO_ECHO)$(UPLOAD_CMD)
+
+
+
 

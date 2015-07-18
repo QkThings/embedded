@@ -14,3 +14,6 @@
 reset; python build.py -a board/comm_bt_2_0/app/slave -t efm32.comm_bt_2_0 -b comm -v -c -u
 reset; python build.py -a test/allfeatures -t efm32.dev_tg -b device -v -c -u
 
+make lib LIB=qkperipheral/qkperipheral.mk TARGET=efm32.dev_tg BUILD_DIR=qkperipheral/build/efm32/dev_tg
+make lib LIB=qkprogram/qkprogram.mk TARGET=efm32.dev_tg BUILD_DIR=qkprogram/build/efm32/dev_tg/device BUILD_TARGET=BUILD_DEVICE VERBOSE=1 USE_PERIPH=1
+

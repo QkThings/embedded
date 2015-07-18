@@ -1,5 +1,6 @@
 #include <qk_program.h>
 #include <qk_debug.h>
+
 #include "allfeatures.h"
 
 qk_data   dat_buf[DAT_COUNT];
@@ -29,6 +30,10 @@ void sample_callback()
 	qk_data_set_value_f(4, wave+0.8);
 	qk_data_set_value_f(5, wave+1.0);
 
+	dat_buf[0].value.f = time;
+	dat_buf[1].value.f = 
+	
+
 	// Generate some events
 	if((counter % 10) == 0)
 	{
@@ -43,7 +48,11 @@ void sample_callback()
 		evt_args[1] = 2.456+(float)counter;
 		evt_args[2] = 3.456+(float)counter;
 		qk_event_set_args(0, evt_args, 3);
-		qk_event_generate(0, "arguments: %0, %1 and %2.");	
+		qk_event_generate(0, "arguments: %0, %1 and %2.");
+
+		qk_board_set_name("This is my name");
+		qk_board_set_version(0x1234);
+
 	}
 }
 
