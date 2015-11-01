@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="embedded" />
+		<Option title="minimal" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="release">
-				<Option output="build/bin/embedded" prefix_auto="1" extension_auto="1" />
+				<Option output="build/bin/minimal" prefix_auto="1" extension_auto="1" />
 				<Option object_output="build/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />

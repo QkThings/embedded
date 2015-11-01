@@ -16,4 +16,15 @@ reset; python build.py -a test/allfeatures -t efm32.dev_tg -b device -v -c -u
 
 make lib LIB=qkperipheral/qkperipheral.mk TARGET=efm32.dev_tg BUILD_DIR=qkperipheral/build/efm32/dev_tg
 make lib LIB=qkprogram/qkprogram.mk TARGET=efm32.dev_tg BUILD_DIR=qkprogram/build/efm32/dev_tg/device BUILD_TARGET=BUILD_DEVICE VERBOSE=1 USE_PERIPH=1
+make app APP=app/minimal/minimal.mk TARGET=efm32.dev_tg BUILD_DIR=app/minimal/build
+make upload FILE=app/minimal/build/bin/minimal.bin TARGET=efm32.dev_tg PORT=COM4 VERBOSE=1
 
+make lib LIB=qkperipheral TARGET=efm32.dev_tg VERBOSE=1
+make lib LIB=qkprogram TARGET=efm32.dev_tg USE_QKPERIPHERAL=1 VERBOSE=1
+make app APP=test/minimal TARGET=efm32.dev_tg VERBOSE=1
+make upload FILE=test/minimal/build/bin/app.bin PORT=COM4 TARGET=efm32.dev_tg VERBOSE=1
+
+make lib LIB=qkperipheral/qkperipheral.mk TARGET=efm32.dev_g BUILD_DIR=qkperipheral/build/efm32/dev_g
+make lib LIB=qkprogram/qkprogram.mk TARGET=efm32.dev_g BUILD_DIR=qkprogram/build/efm32/dev_g/device BUILD_TARGET=BUILD_DEVICE VERBOSE=1 USE_PERIPH=1
+make app APP=app/minimal/minimal.mk TARGET=efm32.dev_g BUILD_DIR=app/minimal/build BUILD_TARGET=BUILD_DEVICE VERBOSE=1 USE_PERIPH=1
+make upload FILE=app/minimal/build/bin/minimal.bin TARGET=efm32.dev_g VERBOSE=1

@@ -62,7 +62,7 @@ $(error EFM32 FAMILY not defined)
 endif
 
 ifeq ($(FAMILY), EFM32G)
-INCLUDE_DIR += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Include
+INCLUDE_DIRS += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Include
 C_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/system_efm32g.c
 S_SRC_FILES += $(ENERGYMICRO)/Device/EnergyMicro/EFM32G/Source/GCC/startup_efm32g.S
 ifeq ($(HAS_BOOT),1)
@@ -113,7 +113,8 @@ LDFLAGS = -mcpu=cortex-m3 -mthumb \
 -Wl,--gc-sections $(CFLAGS)
 
 #LIBS += -Wl,--start-group -lstdc++ -lsupc++ -lc -lgcc -lnosys   -Wl,--end-group
-LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
+#LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
+TARGET_LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
 
 
 ###############################################################################
@@ -121,11 +122,13 @@ LIBS += -Wl,--start-group -lc -lgcc -lnosys  -Wl,--end-group
 ###############################################################################
 #EFM32_LOADER=/home/$(USER)/qkthings_local/build/qt/efm32_loader/release/efm32_loader
 #EFM32_LOADER="C:\Users\mribeiro\qkthings_local\build\qt\efm32_loader\release\efm32_loader.exe"
-EFM32_LOADER=/C/Users/mribeiro/qkthings_local/build/qt/efm32_loader/release/efm32_loader.exe
+#EFM32_LOADER=/C/Users/Mario/qkthings_local/build/qt/efm32_loader/release/efm32_loader.exe
+EFM32_LOADER=C:/Users/mribeiro/qkthings_local/build/qt/efm32_loader/release/efm32_loader.exe
 ifeq  ($(BOOT_POL),)
 $(error BOOT_POL not defined)
 endif
 #PORT ?= /dev/ttyUSB0
 PORT ?= COM5
-UPLOAD_CMD = $(EFM32_LOADER) $(PORT) "$(FILE)" $(BOOT_POL)
+TRANSPORT ?= uart
+UPLOAD_CMD = $(EFM32_LOADER) $(PORT) $(FILE) $(TRANSPORT) $(BOOT_POL)
 

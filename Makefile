@@ -5,7 +5,6 @@ ifeq ($(MAKECMDGOALS),)
 $(error Make what?)
 endif
 
-PROJECT_NAME = name
 export OUTPUT_FILENAME
 
 MAKEFILE_NAME := $(MAKEFILE_LIST)
@@ -30,16 +29,12 @@ endif
 
 TARGET_DIR = target
 TOOLCHAIN_DIR = C:/Users/mribeiro/qkthings_local/toolchain
+#TOOLCHAIN_DIR = C:\Users\mribeiro\qkthings_local\toolchain
+
 
 GNU_INSTALL_ROOT = C:/MinGW/bin
 GNU_PREFIX =
 
-BUILD_DIR ?= build
-OBJ_DIR = $(BUILD_DIR)/obj
-LIB_DIR = $(BUILD_DIR)/lib
-BIN_DIR = $(BUILD_DIR)/bin
-
-BUILD_DIRS = $(BUILD_DIR) $(sort $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR))
 
 OUT_FORMAT = binary
 OPTIMIZE = s
@@ -80,18 +75,85 @@ get_target_board = $(or $(word 2,$(subst ., ,$1)),$(value 2))
 TARGET_CPU=$(call get_target_cpu,$(TARGET))
 TARGET_BOARD=$(call get_target_board,$(TARGET),$(TARGET_NAME))
 
+#LIBS += -L"qkprogram/build/$(TARGET_CPU)/$(TARGET_BOARD)/device/lib" -lqkprogram
+#LIBS += -L"qkperipheral/build/$(TARGET_CPU)/$(TARGET_BOARD)/lib" -lqkperipheral
+#include qkperipheral/target/$(TARGET_CPU)/board/$(TARGET_BOARD).mk
+
 include $(TARGET_DIR)/$(TARGET_CPU)/board/$(TARGET_BOARD).mk
 include $(TARGET_DIR)/$(TARGET_CPU)/$(TARGET_CPU).mk
 
+else
+$(error TARGET must be defined)
 endif
 
+ifeq ($(MAKECMDGOALS),clean)
+BUILD_DIR=$(CLEAN)
+ifneq ($(APP), )
+BUILD_DIR=$(APP)/build
+else
+ifneq ($(LIB), )
+BUILD_DIR=$(LIB)/build
+else
+ifneq ($(CLEAN), )
+BUILD_DIR=$(CLEAN)
+else
+$(error APP, LIB or CLEAN must be provided)
+endif
+endif
+endif
+
+else
 ifeq ($(MAKECMDGOALS),lib)
-  include $(LIB)
+
+include $(LIB)/lib.mk
+
+BUILD_DIR=$(LIB)/build/$(LIB_BUILD_DIR)
+
+INCLUDE_DIRS += \
+$(LIB) \
+$(addprefix $(LIB), $(LIB_INCLUDE_DIRS))
+
+C_SRC_DIRS += \
+$(LIB) \
+$(addprefix $(LIB), $(LIB_C_SRC_DIRS))
+
 else
 ifeq ($(MAKECMDGOALS),app)
-  include $(APP)
+
+INCLUDE_DIRS += \
+qkperipheral/include \
+qkprogram/include
+
+# IMPORTANT: Since qkprogram depends on qkperipheral, qkperipheral MUST be linked
+# AFTER the qkprogram is
+LIBS += -L"qkprogram/build/$(TARGET_CPU)/$(TARGET_BOARD)/device/lib" -lqkprogram
+LIBS += -L"qkperipheral/build/$(TARGET_CPU)/$(TARGET_BOARD)/lib" -lqkperipheral
+include qkperipheral/target/$(TARGET_CPU)/board/$(TARGET_BOARD).mk
+
+PROJECT_NAME = app
+BUILD_DIR = $(APP)/build
+
+include $(APP)/app.mk
+
+INCLUDE_DIRS += \
+$(APP) \
+$(addprefix $(APP), $(APP_INCLUDE_DIRS))
+
+C_SRC_DIRS += \
+$(APP) \
+$(addprefix $(APP), $(APP_C_SRC_DIRS))
+
 endif
 endif
+endif
+
+LIBS += $(TARGET_LIBS)
+
+OBJ_DIR = $(BUILD_DIR)/obj
+LIB_DIR = $(BUILD_DIR)/lib
+BIN_DIR = $(BUILD_DIR)/bin
+
+BUILD_DIRS = $(BUILD_DIR) $(sort $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR))
 
 CC       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)gcc"
 AS       		:= "$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)as"
@@ -124,6 +186,7 @@ vpath %.c $(C_PATHS)
 vpath %.s $(s_PATHS)
 vpath %.S $(S_PATHS)
 
+# These prints are useful to debug Make errors (namely, "no rule to make target" errors)
 #$(info C_FILES=$(C_FILES))
 #$(info C_PATHS=$(C_PATHS))
 #$(info OBJS=$(OBJS))
@@ -132,7 +195,7 @@ lib:	$(BUILD_DIRS) $(LIB_DIR)/lib$(PROJECT_NAME).a
 app:	$(BUILD_DIRS) $(BIN_DIR)/$(PROJECT_NAME).bin
 
 clean:
-	$(RM) $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR)
+	$(RM) $(sort $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR)) $(BUILD_DIR)
 
 # Create build directories
 $(BUILD_DIRS):
